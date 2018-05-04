@@ -1,0 +1,284 @@
+<app-header></app-header>
+
+<main>
+    <div class="container">
+        <div class="row mt-5 pt-5">
+            <div class="col">
+                <h2 class="float-left"><strong>User Directory</strong></h2>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary float-right" (click)="basicModal.show()">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    &nbsp;Add new user
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<section class="user-list">
+    <div class="container">
+        <div class="row mt-3 pt-1">
+            <div class="col">
+                  <!--Panel-->
+                <div class="card card-body">
+                   <div class="table-responsive">
+                          <!--Table-->
+                    <table class="table table-hover">
+                        <!--Table head-->
+                        <thead class="table-head">
+                            <tr>
+                                <th>USER NAME</th>
+                                <th>ADDRESS</th>
+                                <th>CONTACT</th>
+                                <th>EMAIL</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <!--Table head-->
+
+                        <!--Table body-->
+                        <tbody>
+                            <tr *ngFor="let user of users">
+                                <td><img src="../../assets/images/user.png" alt="Profile">{{user.name}}</td>
+                                <td>{{user.address}}</td>
+                                <td>{{user.contact}}</td>
+                                <td>{{user.email}}</td>
+                                <td>   <!-- dropdown -->
+                                      <div class="btn-group">
+                                        <button class="btn table-btn dropdown-toggle" type="button" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></button>
+                                    
+                                        <div class="dropdown-menu">
+                                            <!-- <a class="dropdown-item"><i class="fa fa-pencil-square-o" aria-hidden="true" (click)="updateModal.show()"></i>
+                                              Edit User Details</a> -->
+                                              <a type="button" class="dropdown-item" (click)="updateModal.show(); updateFormControls(user)">
+                                                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                  &nbsp;Edit User Details
+                                              </a>
+                                            <a class="dropdown-item" (click)="deleteUser(user._id)"><i class="fa fa-trash" aria-hidden="true"></i>
+                                              Delete User</a>
+                                        </div>
+                                      </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <!--Table body-->
+                    </table>
+                    <!--Table-->  
+                   </div>
+                </div>
+                <!--/.Panel-->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add new user modal -->
+<div mdbModal #basicModal="mdb-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true" [config]="{backdrop: true, ignoreBackdropClick: false}">
+    <div class="modal-dialog  modal-lg" role="document">
+        <!--Content-->
+        <div class="modal-content">
+           <div class="modal-body">
+                <div class="row">
+                  <div class="col">
+                    <h5><strong>Add new user</strong></h5>
+                  </div>
+                  <div class="col">
+                    <div class="float-right" (click)="basicModal.hide()">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-4 text-center img-div">
+                     
+                          <div class="img-circle">
+                            <img src="../../assets/images/user.png" alt="logo">
+                          </div>
+                          <button class="btn img-btn">Upload</button>
+                      
+                  </div>
+                  <div class="col">
+                      <div class="form-group" [formGroup]="newForm">
+                          <label>User name</label>
+                          <input type="email"
+                                  class="form-control"
+                                  formControlName="name"
+                                  placeholder="Enter full name"
+                                  required>
+                          <div class="form-control-feedback has-danger"
+                                *ngIf="name.errors && (name.dirty || name.touched)">
+                            <p *ngIf="name.errors.required">Name is required</p>
+                          </div>
+                      </div>
+                      <br>
+                      <div class="form-group" [formGroup]="newForm">
+                          <label>Address</label>
+                          <input type="text"
+                                  class="form-control"
+                                  formControlName="address"
+                                  placeholder="Enter address"
+                                  required>
+                          <div class="form-control-feedback has-danger"
+                                *ngIf="address.errors && (address.dirty || address.touched)">
+                            <p *ngIf="address.errors.required">Address is required</p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col">
+                      <div class="form-group" [formGroup]="newForm">
+                          <label>Contact</label>
+                          <input type="email"
+                                  class="form-control"
+                                  formControlName="contact"
+                                  placeholder="Enter contact number"
+                                  required>
+                          <div class="form-control-feedback has-danger"
+                                *ngIf="contact.errors && (contact.dirty || contact.touched)">
+                            <p *ngIf="contact.errors.required">Contact is required</p>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col">
+                        <div class="form-group" [formGroup]="newForm">
+                          <label>Email</label>
+                          <input type="email"
+                                  class="form-control"
+                                  formControlName="email"
+                                  placeholder="Enter email address"
+                                  required>
+                          <div class="form-control-feedback has-danger"
+                                *ngIf="email.errors && (email.dirty || email.touched)">
+                            <p *ngIf="email.errors.required">Email is required</p>
+                            <p *ngIf="email.errors.pattern">The email address must contain at least the @ character</p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <button type="button" [disabled]="!newForm.valid" class="btn btn-primary btn-lg btn-block waves-light" mdbWavesEffect (click)="basicModal.hide();addUser(newForm.value)">Add new user</button>
+                    </div>
+                </div>
+           </div>
+       </div>
+    </div>
+</div>
+
+
+
+<!-- Update user modal -->
+<div mdbModal #updateModal="mdb-modal" id="basicUpdate" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModal" aria-hidden="true" [config]="{backdrop: true, ignoreBackdropClick: false}">
+    <div class="modal-dialog  modal-lg" role="document">
+        <!--Content-->
+        <div class="modal-content">
+           <div class="modal-body">
+                <div class="row">
+                  <div class="col">
+                    <h5><strong>Edit User</strong></h5>
+                  </div>
+                  <div class="col">
+                    <div class="float-right" (click)="updateModal.hide()">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-sm-4 text-center img-div">
+                     
+                          <div class="img-circle">
+                            <img src="../../assets/images/user.png" alt="logo">
+                          </div>
+                        
+                         
+                            <div class="btn-div">
+                                <button class="btn btn-upload">Update</button>
+                                <button class="btn btn-upload del-btn"><i class="fa fa-trash has-danger" aria-hidden="true"></i></button>
+                            </div>
+                      
+                        
+                      
+                  </div>
+                  <div class="col">
+                      <div class="form-group" [formGroup]="updateForm">
+                          <label>User name</label>
+                          <input type="text"
+                                  class="form-control"
+                                  formControlName="updateName"
+                                  placeholder="Enter user name"
+                                  [(ngModel)]="this.initUpdate.name"
+                                  required>
+                          <div class="form-control-feedback has-danger"
+                                *ngIf="updateName.errors && (updateName.dirty || updateName.touched)">
+                            <p *ngIf="updateName.errors.required">Name is required</p>
+                          </div>
+                      </div>
+                      <br>
+                      <div class="form-group" [formGroup]="updateForm">
+                          <label>Address</label>
+                          <input type="text"
+                                  class="form-control"
+                                  formControlName="updateAddress"
+                                  placeholder="Enter address"
+                                  [(ngModel)]="this.initUpdate.address"
+                                  required>
+                          <div class="form-control-feedback has-danger"
+                                *ngIf="updateAddress.errors && (updateAddress.dirty || updateAddress.touched)">
+                            <p *ngIf="updateAddress.errors.required">Address is required</p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col">
+                      <div class="form-group" [formGroup]="updateForm">
+                          <label>Contact</label>
+                          <input type="email"
+                                  class="form-control"
+                                  formControlName="updateContact"
+                                  [(ngModel)]="this.initUpdate.contact"
+                                  placeholder="Enter contact"
+                                  required>
+                          <div class="form-control-feedback has-danger"
+                                *ngIf="updateContact.errors && (updateContact.dirty || updateContact.touched)">
+                            <p *ngIf="updateContact.errors.required">Contact is required</p>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col">
+                        <div class="form-group" [formGroup]="updateForm">
+                          <label>Email</label>
+                          <input type="email"
+                                  class="form-control"
+                                  formControlName="updateEmail"
+                                  placeholder="Enter email address"
+                                  [(ngModel)]="this.initUpdate.email"
+                                  required>
+                          <div class="form-control-feedback has-danger"
+                                *ngIf="updateEmail.errors && (updateEmail.dirty || updateEmail.touched)">
+                            <p *ngIf="updateEmail.errors.required">Email is required</p>
+                            <p *ngIf="updateEmail.errors.pattern">The email address must contain at least the @ character</p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <button type="button" [disabled]="!updateForm.valid" class="btn btn-primary btn-lg btn-block waves-light" mdbWavesEffect (click)="updateModal.hide();updateUser(updateForm.value, initUpdate._id)">Save Changes</button>
+                    </div>
+                </div>
+           </div>
+       </div>
+    </div>
+</div>
+
+
+
